@@ -70,7 +70,7 @@ function HistoryPage() {
 
         <form className="history-filter-form" onSubmit={applyFilters}>
           <select name="room" value={filters.room} onChange={updateFilter}>
-            <option value="">Wszystkie sale</option>
+            <option value="">Sala</option>
             {rooms.map((room) => (
               <option key={room} value={room}>
                 {room}

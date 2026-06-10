@@ -39,9 +39,9 @@ a {
 }
 
 .navbar {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1fr);
   align-items: center;
-  justify-content: space-between;
   gap: 2.25rem;
   min-height: 100px;
   padding: 0 3.5rem;
@@ -50,6 +50,10 @@ a {
   z-index: 10;
   background: #073f7b;
   border-bottom: none;
+}
+
+.navbar-logo {
+  justify-self: start;
 }
 
 .navbar-logo a {
@@ -65,9 +69,10 @@ a {
 .navbar-links {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1.85rem;
   flex-wrap: wrap;
-  flex: 1;
+  justify-self: center;
 }
 
 .navbar-link,
@@ -84,6 +89,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  justify-self: end;
   flex-shrink: 0;
 }
 
@@ -774,15 +780,22 @@ a {
 }
 
 .history-filter-form {
+  width: min(100%, 560px);
+  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.2rem 1.75rem;
+  gap: 1.1rem 1.65rem;
+}
+
+.history-filter-form > select {
+  grid-column: 1 / -1;
 }
 
 .history-filter-form label {
   display: grid;
-  gap: 0.35rem;
+  gap: 0.3rem;
   color: #111827;
+  font-size: 0.78rem;
   font-weight: 500;
 }
 
@@ -809,6 +822,14 @@ a {
   font-weight: 800;
   text-transform: uppercase;
   cursor: pointer;
+}
+
+.history-filter-button,
+.history-clear-button {
+  width: min(100%, 205px);
+  justify-self: center;
+  min-height: 34px;
+  font-size: 0.68rem;
 }
 
 .history-filter-button,
@@ -972,6 +993,29 @@ a {
   min-height: 560px;
   overflow: auto;
   padding-bottom: 0.35rem;
+  scrollbar-color: #cfd6df transparent;
+  scrollbar-width: thin;
+}
+
+.calendar-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.calendar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.calendar-scroll::-webkit-scrollbar-thumb {
+  background: #cfd6df;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: content-box;
+}
+
+.calendar-scroll::-webkit-scrollbar-thumb:hover {
+  background: #aeb8c4;
+  background-clip: content-box;
 }
 
 .calendar-board {
@@ -1132,6 +1176,7 @@ a {
   }
 
   .navbar {
+    display: flex;
     flex-direction: column;
     align-items: stretch;
     gap: 1rem;
