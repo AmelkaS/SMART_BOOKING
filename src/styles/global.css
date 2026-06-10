@@ -17,6 +17,11 @@ body,
   margin: 0;
 }
 
+html,
+body {
+  overflow-x: hidden;
+}
+
 body {
   background: radial-gradient(circle at top, rgba(96, 165, 250, 0.16), transparent 32%),
     linear-gradient(180deg, #020617 0%, #0f172a 100%);
@@ -27,6 +32,7 @@ button,
 input,
 select {
   font: inherit;
+  max-width: 100%;
 }
 
 a {
@@ -108,7 +114,25 @@ a {
   font-weight: 800;
 }
 
+@media (max-width: 1180px) {
+  .navbar {
+    gap: 1.25rem;
+    padding: 0 1.75rem;
+  }
+
+  .navbar-links {
+    gap: 1rem;
+  }
+
+  .navbar-link,
+  .navbar-actions a,
+  .navbar-actions button {
+    font-size: 0.82rem;
+  }
+}
+
 .page-content {
+  width: 100%;
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -393,8 +417,20 @@ a {
   border-radius: 16px;
   padding: 1rem;
   display: flex;
+  gap: 0.75rem;
   justify-content: space-between;
   align-items: center;
+}
+
+.overview-list li,
+.report-stats > div,
+.profile-details > div,
+.room-list-item,
+.reservation-list-item,
+.history-list-item,
+.notification-list-item {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .report-stats {
@@ -1193,6 +1229,60 @@ a {
   font-style: normal;
 }
 
+@media (max-width: 1020px) {
+  .navbar {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    min-height: auto;
+    padding: 1.25rem;
+  }
+
+  .navbar-links {
+    justify-content: center;
+    gap: 0.9rem;
+  }
+
+  .navbar-logo,
+  .navbar-actions {
+    justify-content: center;
+    justify-self: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 820px) {
+  .auth-panel,
+  .rooms-panel,
+  .reservation-panel,
+  .reservations-panel,
+  .history-panel,
+  .notifications-panel,
+  .edit-reservation-panel {
+    padding: 2rem;
+  }
+
+  .rooms-filter-form,
+  .reservations-filter-form,
+  .history-filter-form {
+    gap: 1rem;
+  }
+
+  .calendar-panel {
+    width: 100%;
+  }
+
+  .calendar-controls {
+    width: 100%;
+  }
+
+  .calendar-board {
+    min-width: 820px;
+    grid-template-columns: 48px minmax(700px, 1fr) 48px;
+  }
+}
+
 @media (max-width: 900px) {
   .hero-panel,
   .card-grid,
@@ -1302,6 +1392,32 @@ a {
     padding: 0;
   }
 
+  .profile-details > div,
+  .overview-list li,
+  .notification-list-item {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .notification-read-button,
+  .room-reservation-link,
+  .reservation-outline-button,
+  .history-filter-button,
+  .history-clear-button {
+    width: 100%;
+  }
+
+  .reservation-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .notifications-read-button {
+    padding: 0.75rem 0.9rem;
+    font-size: 0.74rem;
+    line-height: 1.25;
+  }
+
   .history-filter-form {
     grid-template-columns: 1fr;
     gap: 1rem;
@@ -1315,14 +1431,77 @@ a {
 
   .calendar-controls {
     grid-template-columns: 1fr;
-    justify-items: start;
+    justify-items: stretch;
     gap: 0.85rem;
     margin-bottom: 1.25rem;
+  }
+
+  .calendar-room-filter {
+    width: 100%;
   }
 
   .calendar-week-controls {
     justify-self: center;
     padding-bottom: 0;
+  }
+
+  .calendar-scroll {
+    max-height: calc(100vh - 190px);
+    min-height: 520px;
+  }
+
+  .calendar-board {
+    min-width: 720px;
+    grid-template-columns: 42px minmax(636px, 1fr) 42px;
+  }
+
+  .calendar-time-column {
+    font-size: 0.58rem;
+  }
+
+  .calendar-event {
+    left: 4px;
+    right: 4px;
+    padding: 0.28rem 0.34rem;
+    font-size: 0.52rem;
+  }
+}
+
+@media (max-width: 460px) {
+  .navbar-links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    gap: 0.75rem 1rem;
+  }
+
+  .navbar-link,
+  .navbar-actions a,
+  .navbar-actions button {
+    text-align: center;
+    white-space: normal;
+  }
+
+  .auth-panel,
+  .rooms-panel,
+  .reservation-panel,
+  .reservations-panel,
+  .history-panel,
+  .notifications-panel,
+  .profile-card,
+  .not-found-card {
+    padding: 1.25rem;
+  }
+
+  .auth-header h1,
+  .rooms-panel h1,
+  .reservation-panel h1,
+  .reservations-panel h1,
+  .history-panel h1,
+  .notifications-panel h1,
+  .profile-card h1,
+  .not-found-card h1 {
+    font-size: 1.45rem;
   }
 }
 
@@ -1471,5 +1650,15 @@ a {
 
   .form-actions {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 460px) {
+  .edit-reservation-panel {
+    padding: 1.25rem;
+  }
+
+  .edit-reservation-panel h1 {
+    font-size: 1.45rem;
   }
 }
