@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Hotjar from '@hotjar/browser';
 import ReactGA from 'react-ga4';
 import AnalyticsListener from './components/AnalyticsListener.jsx';
@@ -16,8 +16,39 @@ import CalendarPage from './pages/CalendarPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import { useAuthState } from './firebaseAuth.js';
 
+const initialCalendarReservations = [
+  {
+    id: 1,
+    day: 'PON',
+    startTime: '8:00',
+    endTime: '9:00',
+    lecturer: 'Andrzej Nowak',
+    subject: 'PSK',
+  },
+  {
+    id: 2,
+    day: 'WT',
+    startTime: '9:00',
+    endTime: '11:00',
+    lecturer: 'Kamil Nowak',
+    subject: 'WDPAI',
+  },
+];
+
 function App() {
   const user = useAuthState();
+  const [calendarReservations, setCalendarReservations] = useState(() => {
+    const saved = localStorage.getItem('calendarReservations');
+    return saved ? JSON.parse(saved) : initialCalendarReservations;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('calendarReservations', JSON.stringify(calendarReservations));
+  }, [calendarReservations]);
+
+  const addCalendarReservation = (reservation) => {
+    setCalendarReservations((current) => [...current, reservation]);
+  };
 
   useEffect(() => {
     const analyticsId = import.meta.env.VITE_GOOGLE_ANALYTICS_ID;
@@ -52,7 +83,7 @@ function App() {
               path="/entries"
               element={
                 <ProtectedRoute user={user}>
-                  <EntriesPage />
+                  <EntriesPage onAddReservation={addCalendarReservation} />
                 </ProtectedRoute>
               }
             />
@@ -84,7 +115,7 @@ function App() {
               path="/calendar"
               element={
                 <ProtectedRoute user={user}>
-                  <CalendarPage />
+                  <CalendarPage reservations={calendarReservations} />
                 </ProtectedRoute>
               }
             />

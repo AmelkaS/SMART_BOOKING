@@ -10,28 +10,20 @@ const days = [
 
 const hours = ['7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00'];
 
-const reservations = [
-  {
-    id: 1,
-    day: 'PON',
-    hour: '8:00',
-    time: '8:00 - 9:00',
-    lecturer: 'Andrzej Nowak',
-    subject: 'PSK',
-  },
-  {
-    id: 2,
-    day: 'WT',
-    hour: '9:00',
-    time: '9:00 - 11:00',
-    lecturer: 'Kamil Nowak',
-    subject: 'WDPAI',
-  },
-];
+const dayLabels = ['ND', 'PON', 'WT', 'ŚR', 'CZW', 'PT', 'SB'];
 
-function CalendarPage() {
+function CalendarPage({ reservations = [] }) {
   const findReservation = (day, hour) =>
-    reservations.find((reservation) => reservation.day === day && reservation.hour === hour);
+    reservations.find((reservation) => {
+      const reservationStart = reservation.startTime || reservation.hour;
+      if (reservation.day) {
+        return reservation.day === day && reservationStart === hour;
+      }
+
+      const date = new Date(reservation.date);
+      const reservationDay = date.toString() !== 'Invalid Date' ? dayLabels[date.getDay()] : '';
+      return reservationDay === day && reservationStart === hour;
+    });
 
   return (
     <div className="page page-calendar calendar-page">
@@ -69,9 +61,12 @@ function CalendarPage() {
                   <div className="calendar-cell" key={`${day.label}-${hour}`}>
                     {reservation && (
                       <article className="calendar-event">
-                        <strong>{reservation.time}</strong>
-                        <span>{reservation.lecturer}</span>
-                        <em>{reservation.subject}</em>
+                        <strong>
+                          {reservation.time || `${reservation.startTime} - ${reservation.endTime}`}
+                        </strong>
+                        {reservation.room && <span>{reservation.room}</span>}
+                        {reservation.lecturer && <span>{reservation.lecturer}</span>}
+                        {reservation.subject && <em>{reservation.subject}</em>}
                       </article>
                     )}
                   </div>

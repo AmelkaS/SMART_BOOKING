@@ -8,7 +8,7 @@ const initialReservation = {
   participants: '',
 };
 
-function EntriesPage() {
+function EntriesPage({ onAddReservation }) {
   const [reservation, setReservation] = useState(initialReservation);
   const [message, setMessage] = useState('');
 
@@ -22,9 +22,30 @@ function EntriesPage() {
 
   const submitReservation = (event) => {
     event.preventDefault();
+
+    const reservationDate = new Date(reservation.date);
+    const dayLabels = ['ND', 'PON', 'WT', 'ŚR', 'CZW', 'PT', 'SB'];
+    const day = reservationDate.toString() !== 'Invalid Date' ? dayLabels[reservationDate.getDay()] : '';
+
+    const newReservation = {
+      id: Date.now(),
+      room: reservation.room,
+      date: reservation.date,
+      startTime: reservation.startTime,
+      endTime: reservation.endTime,
+      participants: reservation.participants,
+      day,
+      time: `${reservation.startTime} - ${reservation.endTime}`,
+    };
+
+    if (onAddReservation) {
+      onAddReservation(newReservation);
+    }
+
     setMessage(
       `Rezerwacja sali ${reservation.room} została złożona i oczekuje na zatwierdzenie.`
     );
+    setReservation(initialReservation);
   };
 
   return (
