@@ -14,20 +14,34 @@ const formatDate = (value) =>
     year: 'numeric',
   });
 
+const getTodayDateString = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+};
+
 function HistoryPage() {
   const { reservations } = useReservations();
   const [filters, setFilters] = useState(initialFilters);
   const [activeFilters, setActiveFilters] = useState(initialFilters);
+  const todayDate = getTodayDateString();
+
+  const historicalReservations = useMemo(() => {
+    return reservations.filter((item) => item.date < todayDate);
+  }, [reservations, todayDate]);
 
   const filteredHistory = useMemo(() => {
-    return reservations.filter((item) => {
+    return historicalReservations.filter((item) => {
       return (
         (!activeFilters.room || item.room === activeFilters.room) &&
         (!activeFilters.from || item.date >= activeFilters.from) &&
         (!activeFilters.to || item.date <= activeFilters.to)
       );
     });
-  }, [activeFilters, reservations]);
+  }, [activeFilters, historicalReservations]);
 
   const updateFilter = (event) => {
     const { name, value } = event.target;
@@ -47,7 +61,7 @@ function HistoryPage() {
     setActiveFilters(initialFilters);
   };
 
-  const rooms = [...new Set(reservations.map((res) => res.room))];
+  const rooms = [...new Set(historicalReservations.map((res) => res.room))];
 
   return (
     <div className="page page-history history-page">
