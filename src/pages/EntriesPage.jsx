@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useReservations } from '../context/ReservationContext.jsx';
 
 const initialReservation = {
   room: 'Sala 1',
@@ -8,9 +10,12 @@ const initialReservation = {
   participants: '',
 };
 
-function EntriesPage({ onAddReservation }) {
+function EntriesPage() {
+  const { addReservation } = useReservations();
+  const navigate = useNavigate();
   const [reservation, setReservation] = useState(initialReservation);
   const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
 
   const updateReservation = (event) => {
     const { name, value } = event.target;
@@ -18,29 +23,37 @@ function EntriesPage({ onAddReservation }) {
       ...currentReservation,
       [name]: value,
     }));
+    setError('');
   };
 
   const submitReservation = (event) => {
     event.preventDefault();
+    setError('');
 
-    const reservationDate = new Date(reservation.date);
-    const dayLabels = ['ND', 'PON', 'WT', 'ŚR', 'CZW', 'PT', 'SB'];
-    const day = reservationDate.toString() !== 'Invalid Date' ? dayLabels[reservationDate.getDay()] : '';
+    if (!reservation.date) {
+      setError('Wybierz datę rezerwacji');
+      return;
+    }
 
-    const newReservation = {
-      id: Date.now(),
+    if (!reservation.participants || Number(reservation.participants) <= 0) {
+      setError('Liczba uczestników musi być większa niż 0');
+      return;
+    }
+
+    const endTime = parseInt(reservation.endTime);
+    const startTime = parseInt(reservation.startTime);
+    if (endTime <= startTime) {
+      setError('Godzina zakończenia musi być później niż godzina rozpoczęcia');
+      return;
+    }
+
+    addReservation({
       room: reservation.room,
       date: reservation.date,
       startTime: reservation.startTime,
       endTime: reservation.endTime,
-      participants: reservation.participants,
-      day,
-      time: `${reservation.startTime} - ${reservation.endTime}`,
-    };
-
-    if (onAddReservation) {
-      onAddReservation(newReservation);
-    }
+      participants: Number(reservation.participants),
+    });
 
     setMessage(
       `Rezerwacja sali ${reservation.room} została złożona i oczekuje na zatwierdzenie.`
@@ -54,6 +67,7 @@ function EntriesPage({ onAddReservation }) {
         <h1 id="reservation-heading">Zarezerwuj salę</h1>
 
         <form className="reservation-form" onSubmit={submitReservation}>
+          {error && <div className="error-message">{error}</div>}
           <label>
             <span>Sala</span>
             <select name="room" value={reservation.room} onChange={updateReservation}>

@@ -1,80 +1,158 @@
-const days = [
-  { label: 'PON', number: 3 },
-  { label: 'WT', number: 4 },
-  { label: 'ŚR', number: 5 },
-  { label: 'CZW', number: 6 },
-  { label: 'PT', number: 7 },
-  { label: 'SB', number: 8 },
-  { label: 'ND', number: 9 },
-];
+import { useState, useMemo } from 'react';
+import { useReservations } from '../context/ReservationContext.jsx';
 
-const hours = ['7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00'];
+function CalendarPage() {
+  const { reservations } = useReservations();
+  const [currentDate, setCurrentDate] = useState(new Date(2026, 5)); // June 2026
+  const [selectedRoom, setSelectedRoom] = useState('');
 
-const dayLabels = ['ND', 'PON', 'WT', 'ŚR', 'CZW', 'PT', 'SB'];
+  const getDaysInMonth = (date) => {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  };
 
-function CalendarPage({ reservations = [] }) {
-  const findReservation = (day, hour) =>
-    reservations.find((reservation) => {
-      const reservationStart = reservation.startTime || reservation.hour;
-      if (reservation.day) {
-        return reservation.day === day && reservationStart === hour;
-      }
+  const getFirstDayOfMonth = (date) => {
+    return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+  };
 
-      const date = new Date(reservation.date);
-      const reservationDay = date.toString() !== 'Invalid Date' ? dayLabels[date.getDay()] : '';
-      return reservationDay === day && reservationStart === hour;
+  const monthName = currentDate.toLocaleDateString('pl-PL', { month: 'long', year: 'numeric' });
+  const daysInMonth = getDaysInMonth(currentDate);
+  const firstDay = getFirstDayOfMonth(currentDate);
+
+  const filteredReservations = useMemo(() => {
+    return reservations.filter((res) => {
+      const resDate = new Date(res.date);
+      const isSameMonth =
+        resDate.getFullYear() === currentDate.getFullYear() &&
+        resDate.getMonth() === currentDate.getMonth();
+      const matchesRoom = !selectedRoom || res.room === selectedRoom;
+      return isSameMonth && matchesRoom;
     });
+  }, [reservations, currentDate, selectedRoom]);
+
+  const getReservationsForDay = (day) => {
+    const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(
+      2,
+      '0'
+    )}-${String(day).padStart(2, '0')}`;
+    return filteredReservations.filter((res) => res.date === dateStr);
+  };
+
+  const prevMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
+  };
+
+  const nextMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
+  };
+
+  const todayMonth = () => {
+    setCurrentDate(new Date());
+  };
+
+  const rooms = [...new Set(reservations.map((res) => res.room))];
+
+  const dayLabels = ['ND', 'PON', 'WT', 'ŚR', 'CZW', 'PT', 'SB'];
+  const days = [];
+
+  // Puste dni przed pierwszym dniem miesiąca
+  for (let i = 0; i < firstDay; i++) {
+    days.push(null);
+  }
+
+  // Dni miesiąca
+  for (let i = 1; i <= daysInMonth; i++) {
+    days.push(i);
+  }
 
   return (
     <div className="page page-calendar calendar-page">
       <section className="calendar-panel" aria-labelledby="calendar-heading">
-        <div className="calendar-toolbar">
-          <label>
-            <span>Wyszukaj sali</span>
-            <select defaultValue="">
-              <option value="">Value</option>
-              <option value="Sala 1">Sala 1</option>
-              <option value="Sala 2">Sala 2</option>
-              <option value="Sala 3">Sala 3</option>
-            </select>
-          </label>
-          <button type="button">Dzisiaj</button>
+        <div className="calendar-controls">
+          <div className="calendar-toolbar">
+            <label>
+              <span>Filtruj po sali</span>
+              <select value={selectedRoom} onChange={(e) => setSelectedRoom(e.target.value)}>
+                <option value="">Wszystkie sale</option>
+                {rooms.map((room) => (
+                  <option key={room} value={room}>
+                    {room}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <button type="button" onClick={todayMonth} className="calendar-today-button">
+              Dzisiaj
+            </button>
+          </div>
+
+          <div className="calendar-navigation">
+            <button type="button" onClick={prevMonth} className="calendar-nav-button">
+              ← Poprzedni
+            </button>
+            <h1 id="calendar-heading" className="calendar-month-title">
+              {monthName}
+            </h1>
+            <button type="button" onClick={nextMonth} className="calendar-nav-button">
+              Następny →
+            </button>
+          </div>
         </div>
 
-        <h1 id="calendar-heading">Kalendarz</h1>
-
-        <div className="calendar-grid" role="table" aria-label="Kalendarz rezerwacji sal">
-          <div className="calendar-corner" />
-          {days.map((day) => (
-            <div className="calendar-day" key={day.label}>
-              <strong>{day.label}</strong>
-              <span>{day.number}</span>
+        <div className="calendar-grid">
+          {dayLabels.map((label) => (
+            <div className="calendar-day-header" key={label}>
+              {label}
             </div>
           ))}
 
-          {hours.map((hour) => (
-            <div className="calendar-row" key={hour}>
-              <div className="calendar-hour">{hour}</div>
-              {days.map((day) => {
-                const reservation = findReservation(day.label, hour);
-                return (
-                  <div className="calendar-cell" key={`${day.label}-${hour}`}>
-                    {reservation && (
-                      <article className="calendar-event">
+          {days.map((day, index) => (
+            <div
+              className={`calendar-day-cell ${day ? 'has-day' : 'empty'}`}
+              key={`day-${index}`}
+            >
+              {day && (
+                <>
+                  <div className="calendar-day-number">{day}</div>
+                  <div className="calendar-day-events">
+                    {getReservationsForDay(day).map((res) => (
+                      <div className="calendar-event" key={res.id} title={res.room}>
                         <strong>
-                          {reservation.time || `${reservation.startTime} - ${reservation.endTime}`}
+                          {res.startTime} - {res.endTime}
                         </strong>
-                        {reservation.room && <span>{reservation.room}</span>}
-                        {reservation.lecturer && <span>{reservation.lecturer}</span>}
-                        {reservation.subject && <em>{reservation.subject}</em>}
-                      </article>
-                    )}
+                        <span>{res.room}</span>
+                        {res.participants && <small>{res.participants} os.</small>}
+                      </div>
+                    ))}
                   </div>
+                </>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {filteredReservations.length > 0 && (
+          <div className="calendar-legend">
+            <h2>Rezerwacje w miesiącu</h2>
+            <ul>
+              {filteredReservations.map((res) => {
+                const resDate = new Date(res.date);
+                const dayName = resDate.toLocaleDateString('pl-PL', { weekday: 'long' });
+                return (
+                  <li key={res.id}>
+                    <strong>{res.room}</strong> - {dayName}, {res.startTime}-{res.endTime} (
+                    {res.participants} uczestników)
+                  </li>
                 );
               })}
-            </div>
-          ))}
-        </div>
+            </ul>
+          </div>
+        )}
+
+        {filteredReservations.length === 0 && (
+          <div className="calendar-empty">
+            <p>Brak rezerwacji w wybranym miesiącu{selectedRoom && ` dla ${selectedRoom}`}</p>
+          </div>
+        )}
       </section>
     </div>
   );

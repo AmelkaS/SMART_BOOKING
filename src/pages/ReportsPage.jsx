@@ -1,29 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-
-const initialReservations = [
-  {
-    id: 1,
-    room: 'Sala 1',
-    start: '2026-05-01T10:00:00',
-    end: '2026-05-01T13:00:00',
-    status: 'Anulowana',
-  },
-  {
-    id: 2,
-    room: 'Sala 1',
-    start: '2026-05-02T10:00:00',
-    end: '2026-05-02T12:30:00',
-    status: 'Zatwierdzona',
-  },
-  {
-    id: 3,
-    room: 'Sala 2',
-    start: '2026-05-10T09:00:00',
-    end: '2026-05-10T10:30:00',
-    status: 'Oczekuje',
-  },
-];
+import { useReservations } from '../context/ReservationContext.jsx';
 
 const initialFilters = {
   status: '',
@@ -40,24 +17,21 @@ const formatDateTime = (value) => {
     year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-    second: '2-digit',
   });
 };
 
 function ReportsPage() {
-  const [reservations, setReservations] = useState(initialReservations);
+  const { reservations, updateReservation } = useReservations();
   const [filters, setFilters] = useState(initialFilters);
   const [activeFilters, setActiveFilters] = useState(initialFilters);
 
   const filteredReservations = useMemo(() => {
     return reservations.filter((reservation) => {
-      const reservationDate = reservation.start.slice(0, 10);
-
       return (
         (!activeFilters.status || reservation.status === activeFilters.status) &&
         (!activeFilters.room || reservation.room === activeFilters.room) &&
-        (!activeFilters.from || reservationDate >= activeFilters.from) &&
-        (!activeFilters.to || reservationDate <= activeFilters.to)
+        (!activeFilters.from || reservation.date >= activeFilters.from) &&
+        (!activeFilters.to || reservation.date <= activeFilters.to)
       );
     });
   }, [activeFilters, reservations]);
@@ -81,12 +55,10 @@ function ReportsPage() {
   };
 
   const cancelReservation = (id) => {
-    setReservations((currentReservations) =>
-      currentReservations.map((reservation) =>
-        reservation.id === id ? { ...reservation, status: 'Anulowana' } : reservation
-      )
-    );
+    updateReservation(id, { status: 'Anulowana' });
   };
+
+  const rooms = [...new Set(reservations.map((res) => res.room))];
 
   return (
     <div className="page page-reports reservations-page">
@@ -101,18 +73,20 @@ function ReportsPage() {
             <option value="Anulowana">Anulowana</option>
           </select>
           <select name="room" value={filters.room} onChange={updateFilter}>
-            <option value="">Sala</option>
-            <option value="Sala 1">Sala 1</option>
-            <option value="Sala 2">Sala 2</option>
-            <option value="Sala 3">Sala 3</option>
+            <option value="">Wszystkie sale</option>
+            {rooms.map((room) => (
+              <option key={room} value={room}>
+                {room}
+              </option>
+            ))}
           </select>
-          <label>
-            <span>Do</span>
-            <input type="date" name="to" value={filters.to} onChange={updateFilter} />
-          </label>
           <label>
             <span>Od</span>
             <input type="date" name="from" value={filters.from} onChange={updateFilter} />
+          </label>
+          <label>
+            <span>Do</span>
+            <input type="date" name="to" value={filters.to} onChange={updateFilter} />
           </label>
 
           <button type="submit" className="reservations-filter-button">
@@ -127,15 +101,18 @@ function ReportsPage() {
           {filteredReservations.map((reservation) => (
             <article className="reservation-list-item" key={reservation.id}>
               <h2>
-                {reservation.room} - {formatDateTime(reservation.start)} -{' '}
-                {formatDateTime(reservation.end)}
+                {reservation.room} - {formatDateTime(reservation.date + 'T' + reservation.startTime)}{' '}
+                - {formatDateTime(reservation.date + 'T' + reservation.endTime)}
               </h2>
+              <p>
+                Liczba uczestników: <strong>{reservation.participants}</strong>
+              </p>
               <p>
                 Status: <strong>{reservation.status}</strong>
               </p>
               {reservation.status !== 'Anulowana' && (
                 <div className="reservation-actions">
-                  <Link className="reservation-outline-button" to="/entries">
+                  <Link className="reservation-outline-button" to={`/edit/${reservation.id}`}>
                     Edytuj
                   </Link>
                   <button

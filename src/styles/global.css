@@ -1155,3 +1155,151 @@ a {
     width: 100%;
   }
 }
+
+/* Edit Reservation Page */
+.page-edit-reservation {
+  width: 100vw;
+  min-height: calc(100vh - 100px);
+  margin: -2rem 0 -2rem calc(50% - 50vw);
+  padding: 2.75rem 1rem 3rem;
+  display: flex;
+  justify-content: center;
+  background: #f7f7f7;
+  color: #030712;
+}
+
+.edit-reservation-panel {
+  width: min(100%, 560px);
+  margin: 0 auto;
+  padding: 2.5rem 4.25rem 2.35rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(15, 23, 42, 0.28);
+}
+
+.edit-reservation-panel h1 {
+  margin: 0 0 1.75rem;
+  color: #000000;
+  font-size: 2rem;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.edit-reservation-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.form-group {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.form-group label span {
+  color: #111827;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  min-height: 38px;
+  padding: 0.45rem 0.9rem;
+  color: #111827;
+  background: #ffffff;
+  border: 1px solid #777777;
+  border-radius: 7px;
+  color-scheme: light;
+  font-size: 0.95rem;
+}
+
+.form-group input::placeholder {
+  color: #777777;
+  opacity: 1;
+}
+
+.form-group input:disabled {
+  background: #f3f4f6;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.form-error {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.form-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.edit-reservation-submit-button,
+.edit-reservation-cancel-button {
+  min-height: 38px;
+  border-radius: 6px;
+  border: 1px solid #003d7a;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-size: 0.88rem;
+  transition: all 0.2s;
+}
+
+.edit-reservation-submit-button {
+  color: #ffffff;
+  background: #003d7a;
+}
+
+.edit-reservation-submit-button:hover {
+  background: #002d63;
+  border-color: #002d63;
+}
+
+.edit-reservation-cancel-button {
+  color: #003d7a;
+  background: #ffffff;
+}
+
+.edit-reservation-cancel-button:hover {
+  background: #f3f4f6;
+}
+
+@media (max-width: 640px) {
+  .page-edit-reservation {
+    margin-top: -2rem;
+    padding: 1.25rem 1rem 2rem;
+  }
+
+  .edit-reservation-panel {
+    padding: 1.5rem;
+  }
+
+  .edit-reservation-panel h1 {
+    font-size: 1.65rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    grid-template-columns: 1fr;
+  }
+}
