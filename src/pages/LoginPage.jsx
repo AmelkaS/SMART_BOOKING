@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginWithEmail, registerWithEmail } from '../firebaseAuth.js';
-import Button from '../components/Button.jsx';
-import TextInput from '../components/TextInput.jsx';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -27,41 +25,59 @@ function LoginPage() {
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-panel">
+    <div className="page auth-page">
+      <section className="auth-panel" aria-labelledby="auth-heading">
         <div className="auth-header">
-          <span className="eyebrow">Access</span>
-          <h1>{isRegister ? 'Utwórz konto' : 'Zaloguj się'}</h1>
-          <p>Wprowadź dane użytkownika, aby kontynuować do panelu raportów.</p>
+          <span className="auth-brand">SmartBooking</span>
+          <h1 id="auth-heading">{isRegister ? 'Utwórz konto' : 'Zaloguj się'}</h1>
+          <p>
+            {isRegister
+              ? 'Załóż konto, aby rezerwować sale i śledzić swoje zgłoszenia.'
+              : 'Zaloguj się, aby przejść do panelu rezerwacji sal.'}
+          </p>
         </div>
+
         <form className="auth-form" onSubmit={submitForm}>
-          <TextInput
-            label="Adres e-mail"
-            type="email"
-            value={email}
-            name="email"
-            placeholder="twoj@mail.com"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <TextInput
-            label="Hasło"
-            type="password"
-            value={password}
-            name="password"
-            placeholder="••••••••"
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <label>
+            <span>Adres e-mail</span>
+            <input
+              type="email"
+              name="email"
+              value={email}
+              placeholder="twoj@mail.com"
+              autoComplete="email"
+              required
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </label>
+
+          <label>
+            <span>Hasło</span>
+            <input
+              type="password"
+              name="password"
+              value={password}
+              placeholder="••••••••"
+              autoComplete={isRegister ? 'new-password' : 'current-password'}
+              required
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </label>
+
           {error && <div className="error-message">{error}</div>}
-          <Button type="submit">{isRegister ? 'Zarejestruj się' : 'Zaloguj się'}</Button>
+
+          <button type="submit" className="auth-submit-button">
+            {isRegister ? 'Zarejestruj się' : 'Zaloguj się'}
+          </button>
           <button
             type="button"
-            className="text-button"
+            className="auth-switch-button"
             onClick={() => setIsRegister((prev) => !prev)}
           >
             {isRegister ? 'Masz już konto? Zaloguj się' : 'Nie masz konta? Zarejestruj się'}
           </button>
         </form>
-      </div>
+      </section>
     </div>
   );
 }
