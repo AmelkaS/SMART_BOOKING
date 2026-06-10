@@ -882,6 +882,11 @@ a {
   font-size: 0.88rem;
 }
 
+.notifications-read-button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
 .notification-list-item {
   display: flex;
   align-items: flex-start;
@@ -904,6 +909,21 @@ a {
   text-transform: uppercase;
 }
 
+.notification-read-button {
+  flex-shrink: 0;
+  min-width: 96px;
+  min-height: 32px;
+  padding: 0 0.8rem;
+  color: #003d7a;
+  background: #ffffff;
+  border: 1px solid #003d7a;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
 .notification-list-item:not(.is-read) h2::after {
   content: '';
   width: 8px;
@@ -913,6 +933,12 @@ a {
   vertical-align: middle;
   background: #003d7a;
   border-radius: 999px;
+}
+
+.notifications-empty-state {
+  margin: 0;
+  color: #737373;
+  text-align: center;
 }
 
 .calendar-panel {

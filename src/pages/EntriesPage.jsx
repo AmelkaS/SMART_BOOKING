@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNotifications } from '../context/NotificationContext.jsx';
 import { useReservations } from '../context/ReservationContext.jsx';
 
 const initialReservation = {
@@ -12,7 +12,7 @@ const initialReservation = {
 
 function EntriesPage() {
   const { addReservation } = useReservations();
-  const navigate = useNavigate();
+  const { addNotification } = useNotifications();
   const [reservation, setReservation] = useState(initialReservation);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -47,12 +47,18 @@ function EntriesPage() {
       return;
     }
 
-    addReservation({
+    const newReservation = addReservation({
       room: reservation.room,
       date: reservation.date,
       startTime: reservation.startTime,
       endTime: reservation.endTime,
       participants: Number(reservation.participants),
+    });
+
+    addNotification({
+      reservationId: newReservation.id,
+      title: 'Złożono rezerwację',
+      message: `Twoja rezerwacja sali ${newReservation.room} została złożona i oczekuje na zatwierdzenie.`,
     });
 
     setMessage(

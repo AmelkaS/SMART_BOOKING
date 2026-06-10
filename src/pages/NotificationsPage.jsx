@@ -1,44 +1,21 @@
-import { useState } from 'react';
-
-const initialNotifications = [
-  {
-    id: 1,
-    title: 'Złożono rezerwację',
-    message: 'Twoja rezerwacja sali Sala 1 została złożona i oczekuje na zatwierdzenie.',
-    read: true,
-  },
-  {
-    id: 2,
-    title: 'Rezerwacja zatwierdzona',
-    message: 'Twoja rezerwacja sali Sala 2 została zatwierdzona.',
-    read: true,
-  },
-  {
-    id: 3,
-    title: 'Złożono rezerwację',
-    message: 'Twoja rezerwacja sali Sala 1 została złożona i oczekuje na zatwierdzenie.',
-    read: false,
-  },
-];
+import { useNotifications } from '../context/NotificationContext.jsx';
 
 function NotificationsPage() {
-  const [notifications, setNotifications] = useState(initialNotifications);
-
-  const markAllAsRead = () => {
-    setNotifications((currentNotifications) =>
-      currentNotifications.map((notification) => ({
-        ...notification,
-        read: true,
-      }))
-    );
-  };
+  const { notifications, markAllNotificationsAsRead, markNotificationAsRead } =
+    useNotifications();
+  const hasUnreadNotifications = notifications.some((notification) => !notification.read);
 
   return (
     <div className="page page-notifications notifications-page">
       <section className="notifications-panel" aria-labelledby="notifications-heading">
         <h1 id="notifications-heading">Powiadomienia</h1>
 
-        <button type="button" className="notifications-read-button" onClick={markAllAsRead}>
+        <button
+          type="button"
+          className="notifications-read-button"
+          onClick={markAllNotificationsAsRead}
+          disabled={!hasUnreadNotifications}
+        >
           Oznacz wszystkie powiadomienia jako przeczytane
         </button>
 
@@ -56,9 +33,24 @@ function NotificationsPage() {
                 <h2>{notification.title}</h2>
                 <p>{notification.message}</p>
               </div>
-              {notification.read && <span>Przeczytane</span>}
+
+              {notification.read ? (
+                <span>Przeczytane</span>
+              ) : (
+                <button
+                  type="button"
+                  className="notification-read-button"
+                  onClick={() => markNotificationAsRead(notification.id)}
+                >
+                  Odczytaj
+                </button>
+              )}
             </article>
           ))}
+
+          {notifications.length === 0 && (
+            <p className="notifications-empty-state">Brak powiadomień.</p>
+          )}
         </div>
       </section>
     </div>
