@@ -1,6 +1,15 @@
-function TextInput({ label, type = 'text', value, onChange, name, placeholder }) {
+function TextInput({
+  label,
+  type = 'text',
+  value,
+  onChange,
+  name,
+  placeholder,
+  className = 'input-group',
+  ...inputProps
+}) {
   return (
-    <label className="input-group">
+    <label className={className}>
       <span>{label}</span>
       <input
         type={type}
@@ -8,6 +17,7 @@ function TextInput({ label, type = 'text', value, onChange, name, placeholder })
         value={value}
         onChange={onChange}
         placeholder={placeholder}
+        {...inputProps}
       />
     </label>
   );

@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import Button from '../components/Button.jsx';
+import FormField from '../components/FormField.jsx';
+import PagePanel from '../components/PagePanel.jsx';
 import { useNotifications } from '../context/NotificationContext.jsx';
 import { useReservations } from '../context/ReservationContext.jsx';
 
@@ -69,22 +72,23 @@ function EntriesPage() {
 
   return (
     <div className="page page-entries reservation-page">
-      <section className="reservation-panel" aria-labelledby="reservation-heading">
-        <h1 id="reservation-heading">Zarezerwuj salę</h1>
-
+      <PagePanel
+        className="reservation-panel"
+        title="Zarezerwuj salę"
+        titleId="reservation-heading"
+      >
         <form className="reservation-form" onSubmit={submitReservation}>
           {error && <div className="error-message">{error}</div>}
-          <label>
-            <span>Sala</span>
+
+          <FormField label="Sala">
             <select name="room" value={reservation.room} onChange={updateReservation}>
               <option value="Sala 1">Sala 1</option>
               <option value="Sala 2">Sala 2</option>
               <option value="Sala 3">Sala 3</option>
             </select>
-          </label>
+          </FormField>
 
-          <label>
-            <span>Data</span>
+          <FormField label="Data">
             <input
               type="date"
               name="date"
@@ -92,10 +96,9 @@ function EntriesPage() {
               onChange={updateReservation}
               required
             />
-          </label>
+          </FormField>
 
-          <label>
-            <span>Godzina rozpoczęcia</span>
+          <FormField label="Godzina rozpoczęcia">
             <select name="startTime" value={reservation.startTime} onChange={updateReservation}>
               <option value="08:00">08:00</option>
               <option value="09:00">09:00</option>
@@ -103,10 +106,9 @@ function EntriesPage() {
               <option value="11:00">11:00</option>
               <option value="12:00">12:00</option>
             </select>
-          </label>
+          </FormField>
 
-          <label>
-            <span>Godzina zakończenia</span>
+          <FormField label="Godzina zakończenia">
             <select name="endTime" value={reservation.endTime} onChange={updateReservation}>
               <option value="09:00">09:00</option>
               <option value="10:00">10:00</option>
@@ -114,10 +116,9 @@ function EntriesPage() {
               <option value="12:00">12:00</option>
               <option value="13:00">13:00</option>
             </select>
-          </label>
+          </FormField>
 
-          <label>
-            <span>Liczba uczestników</span>
+          <FormField label="Liczba uczestników">
             <input
               type="number"
               name="participants"
@@ -127,15 +128,15 @@ function EntriesPage() {
               onChange={updateReservation}
               required
             />
-          </label>
+          </FormField>
 
-          <button type="submit" className="reservation-submit-button">
+          <Button type="submit" className="reservation-submit-button">
             Rezerwuj
-          </button>
+          </Button>
         </form>
 
         {message && <p className="reservation-message">{message}</p>}
-      </section>
+      </PagePanel>
     </div>
   );
 }

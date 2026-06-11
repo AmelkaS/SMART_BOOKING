@@ -1,4 +1,7 @@
 import { useMemo, useState } from 'react';
+import Button from '../components/Button.jsx';
+import FormField from '../components/FormField.jsx';
+import PagePanel from '../components/PagePanel.jsx';
 import { useReservations } from '../context/ReservationContext.jsx';
 
 const initialFilters = {
@@ -65,9 +68,11 @@ function HistoryPage() {
 
   return (
     <div className="page page-history history-page">
-      <section className="history-panel" aria-labelledby="history-heading">
-        <h1 id="history-heading">Historia rezerwacji</h1>
-
+      <PagePanel
+        className="history-panel"
+        title="Historia rezerwacji"
+        titleId="history-heading"
+      >
         <form className="history-filter-form" onSubmit={applyFilters}>
           <select name="room" value={filters.room} onChange={updateFilter}>
             <option value="">Sala</option>
@@ -77,21 +82,21 @@ function HistoryPage() {
               </option>
             ))}
           </select>
-          <label>
-            <span>Od</span>
-            <input type="date" name="from" value={filters.from} onChange={updateFilter} />
-          </label>
-          <label>
-            <span>Do</span>
-            <input type="date" name="to" value={filters.to} onChange={updateFilter} />
-          </label>
 
-          <button type="submit" className="history-filter-button">
+          <FormField label="Od">
+            <input type="date" name="from" value={filters.from} onChange={updateFilter} />
+          </FormField>
+
+          <FormField label="Do">
+            <input type="date" name="to" value={filters.to} onChange={updateFilter} />
+          </FormField>
+
+          <Button type="submit" className="history-filter-button">
             Zastosuj filtr
-          </button>
-          <button type="button" className="history-clear-button" onClick={clearFilters}>
+          </Button>
+          <Button type="button" className="history-clear-button" onClick={clearFilters}>
             Wyczyść filtr
-          </button>
+          </Button>
         </form>
 
         <div className="history-list">
@@ -111,7 +116,7 @@ function HistoryPage() {
             <p className="history-empty-state">Brak historii dla wybranych kryteriów.</p>
           )}
         </div>
-      </section>
+      </PagePanel>
     </div>
   );
 }

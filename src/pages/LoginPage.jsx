@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '../components/Button.jsx';
+import TextInput from '../components/TextInput.jsx';
 import { loginWithEmail, registerWithEmail } from '../firebaseAuth.js';
 
 function LoginPage() {
@@ -38,44 +40,42 @@ function LoginPage() {
         </div>
 
         <form className="auth-form" onSubmit={submitForm}>
-          <label>
-            <span>Adres e-mail</span>
-            <input
-              type="email"
-              name="email"
-              value={email}
-              placeholder="twoj@mail.com"
-              autoComplete="email"
-              required
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </label>
+          <TextInput
+            className="auth-field"
+            label="Adres e-mail"
+            type="email"
+            name="email"
+            value={email}
+            placeholder="twoj@mail.com"
+            autoComplete="email"
+            required
+            onChange={(event) => setEmail(event.target.value)}
+          />
 
-          <label>
-            <span>Hasło</span>
-            <input
-              type="password"
-              name="password"
-              value={password}
-              placeholder="••••••••"
-              autoComplete={isRegister ? 'new-password' : 'current-password'}
-              required
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </label>
+          <TextInput
+            className="auth-field"
+            label="Hasło"
+            type="password"
+            name="password"
+            value={password}
+            placeholder="••••••••"
+            autoComplete={isRegister ? 'new-password' : 'current-password'}
+            required
+            onChange={(event) => setPassword(event.target.value)}
+          />
 
           {error && <div className="error-message">{error}</div>}
 
-          <button type="submit" className="auth-submit-button">
+          <Button type="submit" className="auth-submit-button">
             {isRegister ? 'Zarejestruj się' : 'Zaloguj się'}
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
             className="auth-switch-button"
             onClick={() => setIsRegister((prev) => !prev)}
           >
             {isRegister ? 'Masz już konto? Zaloguj się' : 'Nie masz konta? Zarejestruj się'}
-          </button>
+          </Button>
         </form>
       </section>
     </div>

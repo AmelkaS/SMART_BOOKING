@@ -1,3 +1,5 @@
+import Button from '../components/Button.jsx';
+import PagePanel from '../components/PagePanel.jsx';
 import { useNotifications } from '../context/NotificationContext.jsx';
 
 function NotificationsPage() {
@@ -7,17 +9,19 @@ function NotificationsPage() {
 
   return (
     <div className="page page-notifications notifications-page">
-      <section className="notifications-panel" aria-labelledby="notifications-heading">
-        <h1 id="notifications-heading">Powiadomienia</h1>
-
-        <button
+      <PagePanel
+        className="notifications-panel"
+        title="Powiadomienia"
+        titleId="notifications-heading"
+      >
+        <Button
           type="button"
           className="notifications-read-button"
           onClick={markAllNotificationsAsRead}
           disabled={!hasUnreadNotifications}
         >
           Oznacz wszystkie powiadomienia jako przeczytane
-        </button>
+        </Button>
 
         <div className="notifications-list">
           {notifications.map((notification) => (
@@ -37,13 +41,13 @@ function NotificationsPage() {
               {notification.read ? (
                 <span>Przeczytane</span>
               ) : (
-                <button
+                <Button
                   type="button"
                   className="notification-read-button"
                   onClick={() => markNotificationAsRead(notification.id)}
                 >
                   Odczytaj
-                </button>
+                </Button>
               )}
             </article>
           ))}
@@ -52,7 +56,7 @@ function NotificationsPage() {
             <p className="notifications-empty-state">Brak powiadomień.</p>
           )}
         </div>
-      </section>
+      </PagePanel>
     </div>
   );
 }
