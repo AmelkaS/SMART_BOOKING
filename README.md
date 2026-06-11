@@ -227,14 +227,21 @@ Identyfikator `VITE_HOTJAR_SITE_ID` należy pobrać z panelu Hotjar.
 
 ## Zrzuty ekranu Google Analytics i Hotjar
 
-Do pełnej dokumentacji wymagane są jeszcze screeny z paneli narzędzi analitycznych:
+### Google Analytics
+![alt text](image-2.png)
 
-- `screenshots/google-analytics.png` - np. GA4 Realtime albo DebugView
-- `screenshots/hotjar.png` - np. Hotjar Recordings, Heatmaps albo Tracking status
+### Realtime
 
-Po dodaniu plików można osadzić je tak:
+![Realtime](image.png)
 
-```md
-![Google Analytics](screenshots/google-analytics.png)
-![Hotjar](screenshots/hotjar.png)
-```
+![Realtime](image-1.png)
+
+### Firebase
+
+![Firebase](image-3.png)
+
+### Debug view
+![alt text](image-4.png)
+
+
+
