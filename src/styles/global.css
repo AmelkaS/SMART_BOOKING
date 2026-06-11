@@ -1,3 +1,4 @@
+/* Base */
 :root {
   color-scheme: dark;
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -44,6 +45,7 @@ a {
   min-height: 100vh;
 }
 
+/* Navigation */
 .navbar {
   display: grid;
   grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1fr);
@@ -131,6 +133,7 @@ a {
   }
 }
 
+/* Shared Layout */
 .page-content {
   width: 100%;
   padding: 2rem;
@@ -284,6 +287,7 @@ a {
   gap: 1rem;
 }
 
+/* Authentication */
 .auth-page {
   width: 100vw;
   min-height: calc(100vh - 100px);
@@ -472,6 +476,7 @@ a {
   margin-top: 1.5rem;
 }
 
+/* Rooms Dashboard */
 .page-dashboard {
   width: 100vw;
   min-height: calc(100vh - 100px);
@@ -581,6 +586,7 @@ a {
   text-align: center;
 }
 
+/* Reservation Form */
 .reservation-page {
   width: 100vw;
   min-height: calc(100vh - 100px);
@@ -660,6 +666,7 @@ a {
   border-radius: 7px;
 }
 
+/* Reservations List */
 .reservations-page {
   width: 100vw;
   min-height: calc(100vh - 100px);
@@ -780,6 +787,7 @@ a {
   text-align: center;
 }
 
+/* History, Notifications and Calendar Pages */
 .history-page,
 .notifications-page,
 .calendar-page {
@@ -795,6 +803,7 @@ a {
 
 .history-panel,
 .notifications-panel,
+/* Calendar */
 .calendar-panel {
   width: min(100%, 660px);
   margin: 0 auto;
@@ -1229,6 +1238,7 @@ a {
   font-style: normal;
 }
 
+/* Responsive Layout */
 @media (max-width: 1020px) {
   .navbar {
     display: flex;
