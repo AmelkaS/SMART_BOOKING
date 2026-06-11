@@ -213,13 +213,17 @@ Identyfikator `VITE_HOTJAR_SITE_ID` należy pobrać z panelu Hotjar.
 
 ![Rezerwacja sali](screenshots/image-3.png)
 
+### Historia rezerwacji
+
+![Historia rezerwacji](screenshots/image-8.png)
+
 ### Powiadomienia
 
-![Powiadomienia](screenshots/image-4.png)
+![Powiadomienia](screenshots/image-7.png)
 
 ### Kalendarz
 
-![Kalendarz](screenshots/image-5.png)
+![Kalendarz](screenshots/image-6.png)
 
 ## Zrzuty ekranu Google Analytics i Hotjar
 
